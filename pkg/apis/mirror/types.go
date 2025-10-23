@@ -41,9 +41,9 @@ type MirrorHost struct {
 	// This may be used with non-compliant OCI registries which are missing the /v2 prefix. Defaults to false.
 	// +optional
 	OverridePath string `json:"override_path,omitempty"`
-        // SecretReferenceName is the name of the reference for the Secret containing the upstream registry credentials.
-        // +optional
-        SecretReferenceName *string `json:"secretReferenceName,omitempty"`
+	// SecretReferenceName is the name of the reference for the Secret containing the upstream registry credentials.
+	// +optional
+	SecretReferenceName *string `json:"secretReferenceName,omitempty"`
 }
 
 // MirrorHostCapability represents a mirror host capability.

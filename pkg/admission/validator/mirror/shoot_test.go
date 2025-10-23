@@ -56,7 +56,7 @@ var _ = Describe("Shoot validator", func() {
 
 			decoder := serializer.NewCodecFactory(scheme, serializer.EnableStrict).UniversalDecoder()
 
-                        ctrl = gomock.NewController(GinkgoT())
+			ctrl = gomock.NewController(GinkgoT())
 			apiReader = mockclient.NewMockReader(ctrl)
 			shootValidator = mirror.NewShootValidator(apiReader, decoder)
 

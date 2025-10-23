@@ -87,9 +87,9 @@ func (e *ensurer) EnsureCRIConfig(ctx context.Context, gctx extensionscontextweb
 				URL: host.Host,
 			}
 			if host.OverridePath == "true" {
-       		    	    registryHost.OverridePath = ptr.To(true)
-		        } else if host.OverridePath == "false" {
-       		    	    registryHost.OverridePath = ptr.To(false)
+				registryHost.OverridePath = ptr.To(true)
+			} else if host.OverridePath == "false" {
+				registryHost.OverridePath = ptr.To(false)
 			}
 
 			for _, c := range host.Capabilities {

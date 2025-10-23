@@ -97,49 +97,47 @@ func validateCapabilities(fldPath *field.Path, capabilities []mirror.MirrorHostC
 // `<host>` is valid DNS subdomain (RFC 1123) and optional `<port>` is in range [1,65535].
 // `<path>` is a valid url path (roughly per RFC3986)
 func ValidateURLPath(fldPath *field.Path, url string) field.ErrorList {
-        var allErrs field.ErrorList
-        var hostAndPath string
+	var allErrs field.ErrorList
+	var hostAndPath string
 	var scheme string
 	schemeIndex := strings.Index(url, "://")
 	if schemeIndex != -1 {
-            scheme = url[:schemeIndex]
-	    hostAndPath = url[schemeIndex+len("://"):]
-        } else {
-	    hostAndPath = url
-        } 
-        if scheme != "https" && scheme != "http" {
-                allErrs = append(allErrs, field.Invalid(fldPath, url, "url must start with 'http://' or 'https://' scheme"))
-        }
-
-        // Split host and path
-        var host, path string
-        pathIndex := strings.Index(hostAndPath, "/")
-        if pathIndex != -1 {
-                host = hostAndPath[:pathIndex]
-                path = hostAndPath[pathIndex:]
-        } else {
-                host = hostAndPath
-        }
-        for _, msg := range registryvalidation.ValidateHostPort(host) {
-                allErrs = append(allErrs, field.Invalid(fldPath, url, msg))
-        }
-        if path != "" {
-                if path[0] != '/' {
-                        allErrs = append(allErrs, field.Invalid(fldPath, url, "path must start with '/'"))
-                }
-                for _, ch := range path {
-                        if ch == ' ' {
-                                allErrs = append(allErrs, field.Invalid(fldPath, url, "path must not contain spaces"))
-                        }
-                        // allow unreserved + reserved characters roughly per RFC3986
-                        if !(ch >= 'A' && ch <= 'Z' ||
-                                ch >= 'a' && ch <= 'z' ||
-                                ch >= '0' && ch <= '9' ||
-                                strings.ContainsRune("-._~:/?#[]@!$&'()*+,;=%", ch)) {
-                                allErrs = append(allErrs, field.Invalid(fldPath, url, "URL path contains invalid characters (RFC 3986)"))
-                        }
-                }
-        }
-
-        return allErrs
+		scheme = url[:schemeIndex]
+		hostAndPath = url[schemeIndex+len("://"):]
+	} else {
+		hostAndPath = url
+	} 
+	if scheme != "https" && scheme != "http" {
+		allErrs = append(allErrs, field.Invalid(fldPath, url, "url must start with 'http://' or 'https://' scheme"))
+	}
+	// Split host and path
+	var host, path string
+	pathIndex := strings.Index(hostAndPath, "/")
+	if pathIndex != -1 {
+		host = hostAndPath[:pathIndex]
+		path = hostAndPath[pathIndex:]
+	} else {
+		host = hostAndPath
+	}
+	for _, msg := range registryvalidation.ValidateHostPort(host) {
+		allErrs = append(allErrs, field.Invalid(fldPath, url, msg))
+	}
+	if path != "" {
+		if path[0] != '/' {
+			allErrs = append(allErrs, field.Invalid(fldPath, url, "path must start with '/'"))
+		}
+		for _, ch := range path {
+			if ch == ' ' {
+				allErrs = append(allErrs, field.Invalid(fldPath, url, "path must not contain spaces"))
+			}
+			// allow unreserved + reserved characters roughly per RFC3986
+			if !(ch >= 'A' && ch <= 'Z' ||
+				ch >= 'a' && ch <= 'z' ||
+				ch >= '0' && ch <= '9' ||
+				strings.ContainsRune("-._~:/?#[]@!$&'()*+,;=%", ch)) {
+				allErrs = append(allErrs, field.Invalid(fldPath, url, "URL path contains invalid characters (RFC 3986)"))
+			}
+		}
+	}
+	return allErrs
 }
